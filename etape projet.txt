@@ -4,3 +4,5 @@ etape projet
 -récupération de mot clé ( donne moi l'heure, reconnait le mot heure, porcupine)
 -retranscription vocale (il parle) (pyttsx3)
 -discussion (IA), capable de faire des blagues et de rire(pour points du jury) (chatbotai, openai)
+
+- modif test
