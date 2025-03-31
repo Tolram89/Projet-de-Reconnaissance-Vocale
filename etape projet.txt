@@ -7,3 +7,36 @@ etape projet
 -traduction 
 
 - modif test
+
+Capture de voix (SpeechRecognition):
+    Responsable 1 : Implémenter la capture de voix avec la bibliothèque SpeechRecognition.
+    Configurer le microphone.
+    Capturer l'entrée vocale.
+    Gérer les erreurs (ex. : microphone non détecté, bruit ambiant).
+
+Retranscription écrite
+    Responsable 2 : Implémenter la retranscription de la voix capturée en texte.
+    Utiliser les résultats de la capture vocale.
+    Afficher le texte dans la console ou une interface utilisateur.
+    Gérer les cas où la reconnaissance échoue.
+
+Récupération de mots-clés
+    Responsable 1 : Développer un système pour détecter des mots-clés spécifiques dans le texte retranscrit.
+    Exemple : détecter "heure" dans "donne-moi l'heure".
+    Utiliser des expressions régulières ou une simple recherche de mots-clés.
+
+Retranscription vocale (pyttsx3)
+    Responsable 2 : Implémenter la retranscription vocale pour que l'application puisse "parler".
+    Configurer la bibliothèque pyttsx3.
+    Faire parler l'application en fonction des mots-clés détectés.
+
+Discussion IA (chatbotai, openai)
+    Responsable 1 : Implémenter une IA capable de répondre à des questions ou de faire des blagues.
+    Configurer l'API OpenAI ou une autre bibliothèque de chatbot.
+    Créer des réponses dynamiques en fonction des mots-clés ou des phrases.
+
+Traduction
+    Responsable 2 : Ajouter une fonctionnalité de traduction.
+    Utiliser une API de traduction (par exemple, Google Translate API).
+    Traduire le texte retranscrit dans une langue choisie par l'utilisateur.
+
