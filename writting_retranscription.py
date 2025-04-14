@@ -24,8 +24,6 @@ def audio_transcribe(filename = "audio.wav") :
                 audio_data = recognizer.record(source)
                 print("Reconnaissance en cours...")
                 text = recognizer.recognize_google(audio_data, language="fr-FR")
-                print("Texte reconnu :")
-                print(text)
                 return text  # Retourne le texte transcrit
         except sr.UnknownValueError:
             return "Impossible de comprendre l'audio. Vérifiez la qualité ou la langue."

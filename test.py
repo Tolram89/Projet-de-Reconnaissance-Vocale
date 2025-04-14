@@ -15,6 +15,6 @@ with mic as source:
 with open("audio.wav", "wb") as f:
     f.write(audio.get_wav_data())
 
-resultat = audio_transcribe("audio.wav")
+resultat = audio_transcribe()
 print("Résultat de la transcription :")
 print(resultat)
