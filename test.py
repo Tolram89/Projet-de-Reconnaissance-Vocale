@@ -1,6 +1,7 @@
 import os
 import speech_recognition as sr
 from writting_retranscription import audio_transcribe
+from vocal_retranscription import assistant_speech
 
 r=sr.Recognizer()
 mic=sr.Microphone()
@@ -18,3 +19,4 @@ with open("audio.wav", "wb") as f:
 resultat = audio_transcribe()
 print("Résultat de la transcription :")
 print(resultat)
+assistant_speech(resultat)
