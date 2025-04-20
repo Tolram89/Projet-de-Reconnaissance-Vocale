@@ -25,9 +25,9 @@ Récupération de mots-clés
     Exemple : détecter "heure" dans "donne-moi l'heure".
     Utiliser des expressions régulières ou une simple recherche de mots-clés.
 
-Retranscription vocale (pyttsx3)
+Retranscription vocale (gTTs)
     Responsable 2 : Implémenter la retranscription vocale pour que l'application puisse "parler".
-    Configurer la bibliothèque pyttsx3.
+    Configurer la bibliothèque gTTs.
     Faire parler l'application en fonction des mots-clés détectés.
 
 Discussion IA (chatbotai, openai)

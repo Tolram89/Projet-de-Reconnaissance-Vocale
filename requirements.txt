@@ -1,5 +1,6 @@
 SpeechRecognition
-pyttsx3
+gTTs
 chatbotai
 openai
 pyAudio
+playsound==1.2.2
