@@ -1,10 +1,30 @@
 import os
 from datetime import datetime
+import requests
+
+
 
 def key_word(text):
     resultat=""
     if text.count('météo') >= 1:
-        print("Vous avez dit : météo")
+        headers = {
+            "User-Agent": "mon-assistant-vocal (ton.email@example.com)"
+        }
+
+        response = requests.get("https://nominatim.openstreetmap.org/search?q=Dijon&format=json&limit=1", headers=headers)
+        data=response.json()
+        first_result = data[0]  # Premier élément du tableau
+        lon = first_result["lon"]
+        lat = first_result["lat"]
+        print(lon, lat)
+        url = "https://api.open-meteo.com/v1/forecast?latitude="+str(lat)+"&longitude="+str(lon)+"&current_weather=true"
+        meteo = requests.get(url)
+        data_meteo=meteo.json()
+        temperature = data_meteo["current_weather"]["temperature"]
+        windspeed = data_meteo["current_weather"]["windspeed"]
+
+        resultat= f"La température est de {temperature}°C et la vitesse du vent est de {windspeed} km/h"
+        
     if text.count('date') >= 1:
         now = datetime.now()
         match now.month:
