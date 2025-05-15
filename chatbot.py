@@ -43,6 +43,8 @@ import string
 
 
 all_word = [] #liste pour contenir les tokens
+paires_entraînement = [] #liste de tuples ([tokens], tag)
+
 
 #tokeniser notre data et la rendre plus propre en mettant tout en minuscule et en enlevant la ponctuation
 for intent in data["intents"]:
@@ -50,8 +52,13 @@ for intent in data["intents"]:
         text = pattern.lower()
         tokkens = nltk.word_tokenize(text)
         tokkens = [mot for mot in tokkens if mot not in string.punctuation]
+        paires_entraînement.append((tokkens, intent["tag"]))
         all_word.extend(tokkens)
+
 all_word = set(all_word)#rend une liste d'éléments uniques     
-print(all_word)
-        
+
+tags = [intent["tag"] for intent in data["intents"]] # recupere les tag
+tags = sorted(set(tags)) # trier et sans doublon meme si normalement il n'y a pas de doublon si la data est bien faite
+
+print(tags)
 
