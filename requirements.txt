@@ -3,4 +3,4 @@ gTTs
 chatbotai
 openai
 pyAudio
-playsound==1.2.2
+playsound==1.2.
