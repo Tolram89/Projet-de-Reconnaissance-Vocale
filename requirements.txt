@@ -5,3 +5,4 @@ openai
 pyAudio
 playsound==1.2.2
 tk
+pillow
