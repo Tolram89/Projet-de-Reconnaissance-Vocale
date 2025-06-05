@@ -1,4 +1,5 @@
-{
+import json
+data = {
     "intents": [
         {
             "tag": "greeting",
@@ -236,6 +237,7 @@
         },
         {
             "tag": "name",
+            
             "patterns": [
                 "Quel est ton prénom ?",
                 "Comment tu t'appelles ?",
@@ -340,6 +342,7 @@
                 "Quel est ton nom dans ce pod ?",
                 "Quel est ton nom dans ce cluster ?"
             ],
+
             "responses": [
                 "Je m'appelle Bérou",
                 "Je suis Bérou",
@@ -838,7 +841,8 @@
                 "Est-ce qu’il y a du verglas ?",
                 "Est-ce qu’il y a du soleil à Dijon ?",
                 "Est-ce qu’il y a du soleil à Paris ?",
-                "Est-ce qu’il y a du soleil dans ma ville ?Quel temps fait-il dehors en ce moment ?",
+                "Est-ce qu’il y a du soleil dans ma ville ?"
+                "Quel temps fait-il dehors en ce moment ?",
                 "Peux-tu me donner la météo pour demain ?",
                 "Quel temps est prévu ce soir ?",
                 "Est-ce qu'il va faire beau aujourd'hui ?",
@@ -970,7 +974,8 @@
                 "Merci pour ton aide attentive et ton soutien moral",
                 "Merci pour ton aide rapide et efficace, tu es au top",
                 "Merci pour ton aide sans faille et ton accompagnement",
-                "Merci pour ton aide constante et ton implicationQuelles sont les dernières actualités ?",
+                "Merci pour ton aide constante et ton implication"
+                "Quelles sont les dernières actualités ?",
                 "Peux-tu me donner les infos du jour ?",
                 "Quelles sont les nouvelles importantes ?",
                 "Quelles sont les dernières news ?",
@@ -2017,3 +2022,12 @@
         }
     ]
 }
+
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=4)
+
+nombre_intent = 0
+for intent in data["intents"]:
+    print(f"{intent['tag']}: {len(intent['patterns'])} patterns")
+    nombre_intent=1+nombre_intent
+print(nombre_intent)#16 actuellement
