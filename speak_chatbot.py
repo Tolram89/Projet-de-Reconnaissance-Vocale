@@ -9,6 +9,7 @@ from nltk.stem import WordNetLemmatizer
 #nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
 from train_chatbot import get_previous_model_version as get_model_version
 from word_key_detection import key_word
+import unicodedata
 
 version = get_model_version()
 dir = "./model_architecture"
@@ -30,6 +31,10 @@ with open("./data.json", "r", encoding="utf-8") as f:
 
 def clear_text(text):
     text = text.lower()# met tout en minuscule
+    text = ''.join(
+        c for c in unicodedata.normalize('NFD', text)
+        if unicodedata.category(c) != 'Mn'
+    )  # retire les accents
     text = text.replace("-"," ") # pour séparer les mots composé 
     text = text.replace("'",' ')
     tokkens = nltk.word_tokenize(text) # je transforme en tokkens
@@ -65,7 +70,11 @@ def best_response(intent) :
             
             if re.search(r"{}", response) : # verifie si il y a un place holder 
                 place_holder = key_word(tag) 
-                response = response.format(place_holder) #remplace le place holder par la véritable réponse
+                if isinstance(place_holder, (tuple, list)):
+                    response = response.format(*place_holder)#remplace le place holder par la véritable réponse, selon si le tupple est un strin ou un tupple
+                else:
+                    response = response.format(place_holder)
+                 
             return response
     return "Je n'ai pas compris."
 #-----------------------------------------------------

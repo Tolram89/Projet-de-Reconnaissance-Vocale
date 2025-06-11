@@ -26,10 +26,13 @@ def audio_transcribe(filename = "audio.wav") :
                 text = recognizer.recognize_google(audio_data, language="fr-FR")
                 return text  # Retourne le texte transcrit
         except sr.UnknownValueError:
-            return "Impossible de comprendre l'audio. Vérifiez la qualité ou la langue."
+            print("Impossible de comprendre l'audio. Vérifiez la qualité ou la langue.")
+            return ""
         except sr.RequestError as e:
-            return f"Erreur avec le service de reconnaissance vocale : {e}"
+            print(f"Erreur avec le service de reconnaissance vocale : {e}")
+            return ""
         except Exception as e:
-            return f"Une erreur inattendue s'est produite : {e}"
+            print(f"Une erreur inattendue s'est produite : {e}")
+            return ""
             
 

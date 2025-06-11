@@ -5,7 +5,7 @@ import requests
 
 def key_word(text):
     resultat=""
-    if text == 'météo':
+    if text == 'meteo':
         headers = {
             "User-Agent": "mon-assistant-vocal (ton.email@example.com)"
         }

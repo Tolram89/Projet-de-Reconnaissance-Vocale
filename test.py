@@ -1,8 +1,6 @@
-import os
 import speech_recognition as sr
 from writting_retranscription import audio_transcribe
 from vocal_retranscription import assistant_speech
-from word_key_detection import key_word
 from speak_chatbot import speak_with_chatbot
 
 def run_program():
@@ -24,6 +22,8 @@ def run_program():
     resultat = audio_transcribe()
     print("Résultat de la transcription :")
     print(resultat)
-    reponse = speak_with_chatbot(resultat)
-    #reponse=key_word(resultat)
+    if resultat != "" :
+        reponse = speak_with_chatbot(resultat)
+    else :
+        reponse = "Vous n'avez rien dit"
     assistant_speech(reponse)

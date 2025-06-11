@@ -16,6 +16,7 @@ if __name__ == "__main__":
     import string
     from nltk.stem import WordNetLemmatizer
     import json
+    import unicodedata
     #nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
     
     with open("./data.json", "r") as f:
@@ -31,6 +32,10 @@ if __name__ == "__main__":
     for intent in data["intents"]:
         for pattern in intent["patterns"]:
             text = pattern.lower()
+            text = ''.join(
+                c for c in unicodedata.normalize('NFD', text)
+                if unicodedata.category(c) != 'Mn'
+            )  # retire les accents
             text = text.replace("-"," ") # pour séparer les mots composé 
             text = text.replace("'",' ')
             tokkens = nltk.word_tokenize(text)
