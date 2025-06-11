@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps  # Ajout de ImageOps
 import threading # permet de lancer des taches en simultané
 import os
 import speech_recognition as sr
@@ -16,17 +16,17 @@ def run_program():
     with mic as source:
         print("Reglage du bruit ambiant...")
         # Création d'un label pour d texte
-        label2 = tk.Label(root,text="Reglage du bruit ambiant...", font=("Arial", 16), bg="blue")
+        label2 = tk.Label(root,text="Reglage du bruit ambiant...", font=("Terminal", 20), bg="black", fg="green")
         label2.pack(side=tk.BOTTOM, padx=10, pady=10)
         r.adjust_for_ambient_noise(source)
         print("Parlez maintenant...")
         label2.pack_forget()  # Effacer le texte du label avant de commencer l'enregistrement
-        label2=tk.Label(root,text="Parlez maintenant...", font=("Arial", 16), bg="blue")
+        label2=tk.Label(root,text="Parlez maintenant...", font=("Terminal", 20), bg="black", fg="green")
         label2.pack(side=tk.BOTTOM, padx=10, pady=10)
         audio = r.listen(source,timeout=5, phrase_time_limit=100) #timeout pour eviter de bloquer le programme si on ne parle pas
         print("Fin de l'enregistrement.")
         label2.pack_forget()  # Effacer le texte du label après l'enregistrement
-        label2 = tk.Label(root,text="Fin de l'enregistrement.", font=("Arial", 16), bg="blue")
+        label2 = tk.Label(root,text="Fin de l'enregistrement.", font=("Terminal", 20), bg="black", fg="green")
         label2.pack(side=tk.BOTTOM, padx=10, pady=10)
         label2.after(2000, label2.destroy)  # Détruire le label après 2 secondes
     with open("audio.wav", "wb") as f:
@@ -59,12 +59,17 @@ root.title("Beru")
 root.minsize(600,400)
 
 # Définir la couleur de fond de la fenêtre principale
-root.configure(bg="white")
+root.configure(bg="black")
 
 # Chargement de l'image
 image_path = "oreil prog.jpg" 
 img = Image.open(image_path)
 img = img.resize((150, 150))  # Redimensionner si besoin
+
+# Inverser les couleurs de l'image
+img = img.convert("RGB")  # S'assurer que l'image est en mode RGB
+img = ImageOps.invert(img)
+
 photo = ImageTk.PhotoImage(img)
 
 # Création d'un conteneur pour centrer le bouton
@@ -87,11 +92,9 @@ image_button = tk.Button(frame, image=photo, command=start_program, bg="black", 
 #lambda permet de lancer mes deux fonctions en même temps
 image_button.image = photo  # Garde une référence à l'image
 image_button.pack()
-
-# Création d'un label pour afficher du texte
-label1 =tk.Label(root, text="Bienvenue dans l'assistant vocal Beru", font=("Arial", 16), bg="blue")
+# Création d'un label pour le texte
+label1 =tk.Label(root, text="Bienvenue dans l'assistant vocal Beru", font=("Terminal", 20), bg="black", fg="green")
 label1.pack(side=tk.TOP, padx=10, pady=10)
-
 
 # Lancement de la boucle principale de l'interface
 root.mainloop()
