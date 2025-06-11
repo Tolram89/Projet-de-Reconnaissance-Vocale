@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 import requests
 
@@ -6,7 +5,7 @@ import requests
 
 def key_word(text):
     resultat=""
-    if text.count('météo') >= 1:
+    if text == 'meteo':
         headers = {
             "User-Agent": "mon-assistant-vocal (ton.email@example.com)"
         }
@@ -14,8 +13,8 @@ def key_word(text):
         response = requests.get("https://nominatim.openstreetmap.org/search?q=Dijon&format=json&limit=1", headers=headers)
         data=response.json()
         first_result = data[0]  # Premier élément du tableau
-        lon = first_result["lon"]
-        lat = first_result["lat"]
+        lon = first_result["lon"]#recupere la longitude
+        lat = first_result["lat"]# la latitude
         print(lon, lat)
         url = "https://api.open-meteo.com/v1/forecast?latitude="+str(lat)+"&longitude="+str(lon)+"&current_weather=true"
         meteo = requests.get(url)
@@ -23,9 +22,9 @@ def key_word(text):
         temperature = data_meteo["current_weather"]["temperature"]
         windspeed = data_meteo["current_weather"]["windspeed"]
 
-        resultat= f"La température est de {temperature}°C et la vitesse du vent est de {windspeed} km/h"
+        resultat = (temperature, windspeed)
         
-    if text.count('date') >= 1:
+    if text == 'date':
         now = datetime.now()
         match now.month:
             case 1:
@@ -54,12 +53,12 @@ def key_word(text):
                 month= "décembre"
            
             
-        resultat = resultat + "on est le "+str(now.day)+ " " + month
+        resultat = resultat +str(now.day)+ " " + month
         
     
-    if text.count('heure') >= 1 :
+    if text == 'heure' :
         now = datetime.now()
-        resultat = resultat +  "il est "+str(now.hour)+" heures et "+str(now.minute)+ " minutes"
+        resultat = resultat +str(now.hour)+" heures et "+str(now.minute)+ " minutes"
 
     return resultat
         

@@ -601,8 +601,8 @@ data = {
                 "C'est quoi la date dans ce cluster ?"
             ],
             "responses": [
-                "Aujourd'hui, nous sommes le {date}",
-                "La date du jour est le {date}"
+                "Aujourd'hui, nous sommes le {}",
+                "La date du jour est le {}"
             ]
         },
         {
@@ -724,21 +724,40 @@ data = {
                 "C'est l'heure de rentrer à la maison ?"
             ],
             "responses": [
-                "Il est {heure}",
-                "L'heure actuelle est {heure}"
+                "Il est {}",
+                "L'heure actuelle est {}"
             ]
         },
         {
-            "tag": "météo",
+            "tag": "meteo",
             "patterns": [
                 "Quel temps fait-il ?",
                 "Donne-moi la météo",
+                "Quelle est la météo ?",
                 "Il fait beau ?",
                 "Quel temps à Dijon ?",
                 "Météo actuelle ?",
                 "Quel temps pour aujourd'hui ?",
                 "Y a-t-il du soleil ?",
                 "Quel est le temps dehors ?",
+                "météo ?",
+                "Météo",
+                "meteo",
+                "meteo?",
+                "météo!", 
+                "meteo.", 
+                "météo.", 
+                "Temps",
+                "temps",
+                "Météo Dijon",
+                "meteo Dijon",
+                "Temps Dijon",
+                "temps Dijon",
+                "Météo maintenant",
+                "meteo maintenant",
+                "Temps maintenant",
+                "temps maintenant",
+                "la météo ?",
                 "Il pleut ?",
                 "Il neige ?",
                 "Température actuelle ?",
@@ -753,12 +772,12 @@ data = {
                 "Météo du jour à Dijon",
                 "Quel temps fait-il dehors ?",
                 "Peux-tu me donner la météo ?",
-                "Est-ce qu’il fait chaud ?",
-                "Est-ce qu’il va pleuvoir ?",
+                "Est-ce qu'il fait chaud ?",
+                "Est-ce qu'il va pleuvoir ?",
                 "Quel temps fait-il en ce moment ?",
                 "Quel est le climat aujourd’hui ?",
                 "Il fait froid ?",
-                "Est-ce qu’il y a du vent ?",
+                "Est-ce qu'il y a du vent ?",
                 "Quel temps fait-il ce week-end ?",
                 "Prévisions météo pour demain ?",
                 "Quel temps fait-il demain ?",
@@ -772,10 +791,10 @@ data = {
                 "Quel temps pour demain après-midi ?",
                 "Quel temps pour demain soir ?",
                 "Quel temps pour ce week-end ?",
-                "Est-ce qu’il va neiger ?",
-                "Est-ce qu’il va faire beau demain ?",
-                "Est-ce qu’il va faire chaud cette semaine ?",
-                "Est-ce qu’il va faire froid ce soir ?",
+                "Est-ce qu'il va neiger ?",
+                "Est-ce qu'il va faire beau demain ?",
+                "Est-ce qu'il va faire chaud cette semaine ?",
+                "Est-ce qu'il va faire froid ce soir ?",
                 "Quel temps pour les vacances ?",
                 "Quel temps pour la rentrée ?",
                 "Quel temps pour Noël ?",
@@ -841,7 +860,7 @@ data = {
                 "Est-ce qu’il y a du verglas ?",
                 "Est-ce qu’il y a du soleil à Dijon ?",
                 "Est-ce qu’il y a du soleil à Paris ?",
-                "Est-ce qu’il y a du soleil dans ma ville ?"
+                "Est-ce qu’il y a du soleil dans ma ville ?",
                 "Quel temps fait-il dehors en ce moment ?",
                 "Peux-tu me donner la météo pour demain ?",
                 "Quel temps est prévu ce soir ?",
@@ -864,8 +883,8 @@ data = {
                 "Est-ce qu'il y a du vent aujourd'hui ?"
             ],
             "responses": [
-                "La température à Dijon est de {temp}°C",
-                "Il fait actuellement {temp}°C avec un vent de {vent} km/h"
+                "La température à Dijon est de {}°C avec un vent de {} km/h",
+                "Il fait actuellement {}°C avec un vent de {} km/h"
             ]
         },
         {
@@ -975,26 +994,7 @@ data = {
                 "Merci pour ton aide rapide et efficace, tu es au top",
                 "Merci pour ton aide sans faille et ton accompagnement",
                 "Merci pour ton aide constante et ton implication"
-                "Quelles sont les dernières actualités ?",
-                "Peux-tu me donner les infos du jour ?",
-                "Quelles sont les nouvelles importantes ?",
-                "Quelles sont les dernières news ?",
-                "Quelles sont les infos politiques aujourd'hui ?",
-                "Quelles sont les infos sportives du jour ?",
-                "Quelles sont les infos économiques ?",
-                "Quelles sont les infos culturelles ?",
-                "Quelles sont les infos scientifiques ?",
-                "Quelles sont les infos insolites aujourd'hui ?",
-                "Quelles sont les infos locales ce matin ?",
-                "Quelles sont les infos internationales ?",
-                "Peux-tu me faire un résumé de l'actualité ?",
-                "Quelles sont les infos à ne pas manquer ?",
-                "Quelles sont les infos du soir ?",
-                "Quelles sont les dernières nouvelles en France ?",
-                "Quelles sont les dernières nouvelles dans le monde ?",
-                "Quelles sont les infos du week-end ?",
-                "Quelles sont les infos du mois ?",
-                "Quelles sont les infos du trimestre ?"
+    
             ],
             "responses": [
                 "Avec plaisir",
@@ -1042,7 +1042,6 @@ data = {
                 "Explique-moi comment tu fonctionnes",
                 "Qu'est-ce que tu proposes comme aide ?",
                 "Tu peux m'aider pour mes devoirs ?",
-                "Tu peux m'aider pour la météo ?",
                 "Tu peux m'aider pour l'heure ?",
                 "Tu peux m'aider pour la date ?",
                 "Tu peux m'aider pour un calcul ?",
@@ -1285,7 +1284,6 @@ data = {
                 "Une blague sur les examens ?",
                 "Une blague sur les notes ?",
                 "Une blague sur les chats et les chiens ?",
-                "Une blague sur la météo ?",
                 "Une blague sur la pluie ?",
                 "Une blague sur le soleil ?",
                 "Une blague sur la neige ?",
@@ -1409,8 +1407,6 @@ data = {
                 "Quelles sont les infos du soir sur le sport ?",
                 "Quelles sont les infos du matin sur la science ?",
                 "Quelles sont les infos du soir sur l'insolite ?",
-                "Quelles sont les infos du matin sur la météo ?",
-                "Quelles sont les infos du soir sur la météo ?",
                 "Quelles sont les infos du matin sur la santé ?",
                 "Quelles sont les infos du soir sur la santé ?",
                 "Quelles sont les infos du matin à Londres ?",
@@ -1501,8 +1497,8 @@ data = {
                 "Quelles sont les infos du soir à Bruxelles ?"
             ],
             "responses": [
-                "Voici les titres du jour : {news}",
-                "Aujourd'hui dans l'actualité : {news}"
+                "Voici les titres du jour : {}",
+                "Aujourd'hui dans l'actualité : {}"
             ]
         },
         {
@@ -2016,8 +2012,8 @@ data = {
                 "Résous 7 + 7 + 7 + 7"
             ],
             "responses": [
-                "Voici le résultat : {resultat}",
-                "Le calcul donne : {resultat}"
+                "Voici le résultat : {}",
+                "Le calcul donne : {}"
             ]
         }
     ]
