@@ -11,7 +11,7 @@ from speak_chatbot import speak_with_chatbot
 
 def run_program():
     r = sr.Recognizer()
-    mic = sr.Microphone()
+    mic = sr.Microphone(device_index=1)
     #print("liste des microphones disponibles :")
     #print(sr.Microphone.list_microphone_names()) #afin de trouver le bon index du micro
     with mic as source:
@@ -24,7 +24,7 @@ def run_program():
         label2.pack_forget()  # Effacer le texte du label avant de commencer l'enregistrement
         label2=tk.Label(root,text="Parlez maintenant...", font=("Terminal", 20), bg="black", fg="green")
         label2.pack(side=tk.BOTTOM, padx=10, pady=10)
-        audio = r.listen(source,timeout=5, phrase_time_limit=100) #timeout pour eviter de bloquer le programme si on ne parle pas
+        audio = r.listen(source,timeout=3) # Enregistrement de l'audio
         print("Fin de l'enregistrement.")
         label2.pack_forget()  # Effacer le texte du label après l'enregistrement
         label2 = tk.Label(root,text="Fin de l'enregistrement.", font=("Terminal", 20), bg="black", fg="green")
@@ -39,10 +39,10 @@ def run_program():
     print("Résultat de la transcription :")
     print(resultat)
     if resultat != "" :
-        reponse = speak_with_chatbot(resultat)
+        reponse, langue_cible = speak_with_chatbot(resultat)
     else :
         reponse = "Vous n'avez rien dit"
-    assistant_speech(reponse)
+    assistant_speech(reponse, langue_cible)
 
 
 def start_program():
@@ -102,3 +102,4 @@ label1.pack(side=tk.TOP, padx=10, pady=10)
 
 # Lancement de la boucle principale de l'interface
 root.mainloop()
+
