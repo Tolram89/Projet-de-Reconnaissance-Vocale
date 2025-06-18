@@ -38,12 +38,12 @@ def run_program():
     print("Résultat de la transcription :")
     print(resultat)
     if resultat != "" :
-        reponse = speak_with_chatbot(resultat)
+        reponse, langue_cible = speak_with_chatbot(resultat)
     elif resultat == None:
         pass#ne rien faire pour pouvoir reparler
     else :
         reponse = "Vous n'avez rien dit"
-    assistant_speech(reponse)
+    assistant_speech(reponse, langue_cible)
 
 
 def start_program():

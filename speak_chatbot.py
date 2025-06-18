@@ -72,7 +72,8 @@ def best_response(intent, phrase_utilisateur) :
             response = random.choice(responses) # choisi au hasard parmis une des réponses
             
             if re.search(r"{}", response) : # verifie si il y a un place holder 
-                place_holder = key_word(tag, phrase_utilisateur) # gère les différentes fonctionnalitées
+
+                place_holder, langue_cible  = key_word(tag, phrase_utilisateur) # gère les différentes fonctionnalitées
                 if place_holder==None:#pour gérer quand on a un problème avec la météo
                     return None
                 else:
@@ -81,23 +82,27 @@ def best_response(intent, phrase_utilisateur) :
                     else:
                         response = response.format(place_holder)
                  
-            return response
+            return response, langue_cible
     return "Je n'ai pas compris."
 #-----------------------------------------------------
 def speak_with_chatbot(text):
-
+    langue_cible = "fr"  # Langue par défaut
     #tokeniser notre phrase et la rendre plus propre en mettant tout en minuscule et en enlevant la ponctuation
     tokkens = clear_text(text)
+
     phrase_utilisateur = text #afin de la transmettre aux fonctionnalité qui en ont besoin
     #creer le vecteur bag_of_word et le transforme en tableau numpy
     input_array_bag_of_word = create_input_array(tokkens)
 
     intent = intention_predict(input_array_bag_of_word)
-    response = best_response(intent, phrase_utilisateur)
+
+    response, langue_cible = best_response(intent, phrase_utilisateur)
     
     print(response)
-    return response
-#test
-#while True :
-#    text = input("toi :")
-#    speak_with_chatbot(text)
+    return response, langue_cible
+
+#pour le test
+"""while True:
+    text = input("toi :")
+    speak_with_chatbot(text)"""
+

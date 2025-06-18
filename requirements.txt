@@ -13,3 +13,6 @@ numpy
 spacy
 dateparser
 scikit-learn
+googletrans
+asyncio
+
