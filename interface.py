@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageOps  # Ajout de ImageOps
 import threading # permet de lancer des taches en simultané
-import os
 import speech_recognition as sr
 from writting_retranscription import audio_transcribe
 from vocal_retranscription import assistant_speech
@@ -24,7 +23,7 @@ def run_program():
         label2.pack_forget()  # Effacer le texte du label avant de commencer l'enregistrement
         label2=tk.Label(root,text="Parlez maintenant...", font=("Terminal", 20), bg="black", fg="green")
         label2.pack(side=tk.BOTTOM, padx=10, pady=10)
-        audio = r.listen(source,timeout=3) # Enregistrement de l'audio
+        audio = r.listen(source, timeout=6, phrase_time_limit=10) #timeout pour eviter de bloquer le programme si on ne parle pas
         print("Fin de l'enregistrement.")
         label2.pack_forget()  # Effacer le texte du label après l'enregistrement
         label2 = tk.Label(root,text="Fin de l'enregistrement.", font=("Terminal", 20), bg="black", fg="green")
@@ -40,6 +39,8 @@ def run_program():
     print(resultat)
     if resultat != "" :
         reponse, langue_cible = speak_with_chatbot(resultat)
+    elif resultat == None:
+        pass#ne rien faire pour pouvoir reparler
     else :
         reponse = "Vous n'avez rien dit"
     assistant_speech(reponse, langue_cible)

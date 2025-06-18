@@ -6,7 +6,10 @@ import re
 import nltk
 import string
 from nltk.stem import WordNetLemmatizer
-#nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
+try: 
+    nltk.data.find('corpora/wordnet') # on verifie si wornet est déjà télécharger
+except:
+    nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
 from train_chatbot import get_previous_model_version as get_model_version
 from word_key_detection import key_word
 import unicodedata
@@ -60,7 +63,7 @@ def intention_predict(input_array_bag_of_word) :
     intent = preds.argmax()# récupère le plus probable
     return intent
 #-----------------------------------------------------
-def best_response(intent,phrase_utilisateur) :
+def best_response(intent, phrase_utilisateur) :
     tag = tags[intent]
 
     for intent in data["intents"]:
@@ -69,11 +72,15 @@ def best_response(intent,phrase_utilisateur) :
             response = random.choice(responses) # choisi au hasard parmis une des réponses
             
             if re.search(r"{}", response) : # verifie si il y a un place holder 
-                place_holder, langue_cible = key_word(tag,phrase_utilisateur) 
-                if isinstance(place_holder, (tuple, list)):
-                    response = response.format(*place_holder)#remplace le place holder par la véritable réponse, selon si le tupple est un strin ou un tupple
+
+                place_holder, langue_cible  = key_word(tag, phrase_utilisateur) # gère les différentes fonctionnalitées
+                if place_holder==None:#pour gérer quand on a un problème avec la météo
+                    return None
                 else:
-                    response = response.format(place_holder)
+                    if isinstance(place_holder, (tuple, list)):
+                        response = response.format(*place_holder)#remplace le place holder par la véritable réponse, selon si le tupple est un strin ou un tupple
+                    else:
+                        response = response.format(place_holder)
                  
             return response, langue_cible
     return "Je n'ai pas compris."
@@ -82,11 +89,13 @@ def speak_with_chatbot(text):
     langue_cible = "fr"  # Langue par défaut
     #tokeniser notre phrase et la rendre plus propre en mettant tout en minuscule et en enlevant la ponctuation
     tokkens = clear_text(text)
-    phrase_utilisateur = text
+
+    phrase_utilisateur = text #afin de la transmettre aux fonctionnalité qui en ont besoin
     #creer le vecteur bag_of_word et le transforme en tableau numpy
     input_array_bag_of_word = create_input_array(tokkens)
 
     intent = intention_predict(input_array_bag_of_word)
+
     response, langue_cible = best_response(intent, phrase_utilisateur)
     
     print(response)
@@ -96,3 +105,4 @@ def speak_with_chatbot(text):
 """while True:
     text = input("toi :")
     speak_with_chatbot(text)"""
+

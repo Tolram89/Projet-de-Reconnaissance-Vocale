@@ -1,7 +1,7 @@
 import os
 import fnmatch
 #---------------------------------------------------------
-def get_previous_model_version(folder_path = "./model_architecture", prefix_model = "/mon_model_v") :
+def get_previous_model_version(folder_path = "./model_architecture") :
     for file in os.listdir(folder_path):
         if fnmatch.fnmatch(file, "*.keras"):
             file = os.path.basename(file).split('v')[-1] #recupère apres le v
@@ -17,7 +17,10 @@ if __name__ == "__main__":
     from nltk.stem import WordNetLemmatizer
     import json
     import unicodedata
-    #nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
+    try: 
+        nltk.data.find('corpora/wordnet') # on verifie si wornet est déjà télécharger
+    except:
+        nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
     
     with open("./data.json", "r") as f:
         data = json.load(f)
