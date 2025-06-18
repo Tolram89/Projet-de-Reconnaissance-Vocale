@@ -6,4 +6,10 @@ pyAudio
 playsound==1.2.2
 tk
 pillow
-
+nltk
+tensorflow
+matplotlib
+numpy
+spacy
+dateparser
+scikit-learn
