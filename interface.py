@@ -23,7 +23,7 @@ def run_program():
         label2.pack_forget()  # Effacer le texte du label avant de commencer l'enregistrement
         label2=tk.Label(root,text="Parlez maintenant...", font=("Terminal", 20), bg="black", fg="green")
         label2.pack(side=tk.BOTTOM, padx=10, pady=10)
-        audio = r.listen(source, timeout=6, phrase_time_limit=10) #timeout pour eviter de bloquer le programme si on ne parle pas
+        audio = r.listen(source, timeout=6, phrase_time_limit=20) #timeout pour eviter de bloquer le programme si on ne parle pas
         print("Fin de l'enregistrement.")
         label2.pack_forget()  # Effacer le texte du label après l'enregistrement
         label2 = tk.Label(root,text="Fin de l'enregistrement.", font=("Terminal", 20), bg="black", fg="green")
@@ -43,6 +43,7 @@ def run_program():
         pass#ne rien faire pour pouvoir reparler
     else :
         reponse = "Vous n'avez rien dit"
+        langue_cible="fr"
     assistant_speech(reponse, langue_cible)
 
 

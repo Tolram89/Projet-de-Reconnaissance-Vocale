@@ -6,6 +6,7 @@ lang_map = {
     "afar": "aa",
     "akan": "ak",
     "amharique": "am",
+    "anglais": "en",
     "arabe": "ar",
     "arménien": "hy",
     "assamais": "as",

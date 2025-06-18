@@ -14,5 +14,4 @@ spacy
 dateparser
 scikit-learn
 googletrans
-asyncio
 

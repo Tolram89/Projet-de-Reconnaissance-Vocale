@@ -17,7 +17,7 @@ def assistant_speech(text, langue_parler):
     if not isinstance(text, str):
         print("Le texte doit être une chaîne de caractères.")
         return
-    if langue_parler=="ar" or langue_parler=="zh" or langue_parler=="ja":
+    if langue_parler=="ar" or langue_parler=="zh" or langue_parler=="ja" or langue_parler=="en":
         tts = gTTS(text, lang=langue_parler) # utlisier gTTS 
     else: 
         tts = gTTS(text, lang=langue_parler, tld=langue_parler)

@@ -18,7 +18,7 @@ def recup_ville(phrase_utilisateur) :
         ville = word.text
     return ville
 def couper_phrase(mot, phrase_utilisateur):
-    date_phrase = re.split("du", phrase_utilisateur)[1]#récupere ce qu'il ya apres du
+    date_phrase = re.split(mot, phrase_utilisateur)[1]#récupere ce qu'il ya apres du
     if re.search(r"à", date_phrase) :
         date_phrase = re.split("à", date_phrase)[0] # empeche les bugs quans on demande une ville apres la date
     for punctuation in string.punctuation:
@@ -35,13 +35,13 @@ def recup_date(phrase_utilisateur) :
             start_date = start_date.strftime("%Y-%m-%d")
 
         elif re.search(r" du ", phrase_utilisateur) : #du 20 juin
-            date_phrase, start_date = couper_phrase("du", phrase_utilisateur)
+            date_phrase, start_date = couper_phrase(" du ", phrase_utilisateur)
 
         elif re.search(r" le ", phrase_utilisateur) : # le 20 juin
-            date_phrase, start_date = couper_phrase("le", phrase_utilisateur)
+            date_phrase, start_date = couper_phrase(" le ", phrase_utilisateur)
 
         elif re.search(r" ce ", phrase_utilisateur) : # ce 20 juin
-            date_phrase, start_date = couper_phrase("ce", phrase_utilisateur)
+            date_phrase, start_date = couper_phrase(" ce ", phrase_utilisateur)
         elif re.search(r" pour ", phrase_utilisateur) : # pour le 20 juin
             date_phrase, start_date = couper_phrase("pour", phrase_utilisateur)
             
@@ -52,7 +52,7 @@ def recup_date(phrase_utilisateur) :
     
         end_date = start_date
     except:#gere quand un utilisateur dit ce weekend ou samedi que le programme ne comprend pas pour lui permettre de reformuler correctement
-        assistant_speech("Désolé, je ne comprends pas les expressions comme ce weekend, samedi, etc. Veuillez donner une date exacte comme 20 juin, merci.")
+        assistant_speech("Désolé, je ne comprends pas les expressions comme ce weekend, samedi, etc. Veuillez donner une date exacte comme 20 juin, merci.", "fr")
         return None, None, None
 
     return start_date, end_date, date_phrase
@@ -135,7 +135,7 @@ def key_word(tag, phrase_utilisateur):
         headers = {
             "User-Agent": "mon-assistant-vocal (ton.email@example.com)"
         }
-        assistant_speech("D'accord, je récupère la météo")
+        assistant_speech("D'accord, je récupère la météo", langue_cible)
         ville = recup_ville(phrase_utilisateur) # recup la ville
         response = requests.get(f"https://nominatim.openstreetmap.org/search?q={ville}&format=json&limit=1", headers=headers)
         data=response.json()

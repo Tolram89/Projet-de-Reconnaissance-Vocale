@@ -70,7 +70,7 @@ def best_response(intent, phrase_utilisateur) :
         if intent["tag"] == tag :
             responses = intent["responses"] # recupere les réponses disponibles 
             response = random.choice(responses) # choisi au hasard parmis une des réponses
-            
+            langue_cible="fr" #evite les bugs
             if re.search(r"{}", response) : # verifie si il y a un place holder 
 
                 place_holder, langue_cible  = key_word(tag, phrase_utilisateur) # gère les différentes fonctionnalitées
