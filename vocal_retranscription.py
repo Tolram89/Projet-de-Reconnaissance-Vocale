@@ -3,7 +3,8 @@ import os
 import playsound
 
 
-def assistant_speech(text):
+
+def assistant_speech(text, langue_parler):
     """ :
     Fonction pour faire parler l'assistant vocal.
     Utilise gTTS pour convertir le texte en audio et playsound pour lire le fichier audio.
@@ -16,7 +17,11 @@ def assistant_speech(text):
     if not isinstance(text, str):
         print("Le texte doit être une chaîne de caractères.")
         return
-    tts = gTTS(text, lang='fr', tld='fr') 
+    if langue_parler=="ar" or langue_parler=="zh" or langue_parler=="ja":
+        tts = gTTS(text, lang=langue_parler) # utlisier gTTS 
+    else: 
+        tts = gTTS(text, lang=langue_parler, tld=langue_parler)
+    langue_parler="fr"
     tts.save('output.mp3')
     playsound.playsound("output.mp3", True)
     os.remove("output.mp3")
