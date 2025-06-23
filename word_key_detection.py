@@ -67,7 +67,7 @@ def recup_meteo(lat, lon, start_date, end_date, ville, date_phrase):
     today_str = datetime.now().strftime("%Y-%m-%d")
 
     if start_date==today_str or date_phrase == "demain":
-        # Si la date demandée est aujourd'hui ou demain
+        # Si la date demandée est aujourd'hui
         #On récupère la température actuelle avec current_weather
         url = "https://api.open-meteo.com/v1/forecast?latitude="+str(lat)+"&longitude="+str(lon)+"&current_weather=true"
         meteo = requests.get(url)
@@ -81,6 +81,16 @@ def recup_meteo(lat, lon, start_date, end_date, ville, date_phrase):
         temperature_min = data_meteo["daily"]["temperature_2m_min"][0]
         #On construit une phrase complète avec la température actuelle et les prévisions
         phrase = "{} à {}, il fait actuellement {}°C. Les températures prévues sont entre {}°C et {}°C.".format(date_phrase, ville, temperature, temperature_min, temperature_max)
+    elif date_phrase == "demain":
+        # Si la date demandée est demain
+        #On récupère aussi les prévisions min/max pour la journée
+        url = "https://api.open-meteo.com/v1/forecast?latitude="+str(lat)+"&longitude="+str(lon)+"&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&start_date="+str(start_date)+"&end_date="+str(end_date)+"&timezone=Europe/Paris"
+        meteo = requests.get(url)
+        data_meteo=meteo.json()
+        temperature_max = data_meteo["daily"]["temperature_2m_max"][0]
+        temperature_min = data_meteo["daily"]["temperature_2m_min"][0]
+        #On construit une phrase complète avec la température actuelle et les prévisions
+        phrase = "{} à {}, les températures prévues sont entre {}°C et {}°C.".format(date_phrase, ville, temperature_min, temperature_max)
     else :
         # Si la date demandée est une date future (autre que aujourd'hui/demain)
         # on récupère uniquement les prévisions min/max pour cette date
