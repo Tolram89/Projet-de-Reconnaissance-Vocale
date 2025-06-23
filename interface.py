@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageOps
-import threading
+from PIL import Image, ImageTk, ImageOps # Ajout de ImageOps
+import threading # permet de lancer des taches en simultané
 import sounddevice
 import soundfile as sf
 import numpy as np
