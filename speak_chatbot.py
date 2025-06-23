@@ -1,39 +1,54 @@
-import tensorflow as tf
 import numpy as np
+import unicodedata
+import string
 import random
 import re
-
-import nltk
-import string
-from nltk.stem import WordNetLemmatizer
-try: 
-    nltk.data.find('corpora/wordnet') # on verifie si wornet est déjà télécharger
-    print("wordnet trouvé")
-except:
-    nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
-from train_chatbot import get_previous_model_version as get_model_version
 from word_key_detection import key_word
-import unicodedata
 
-version = get_model_version()
-dir = "./model_architecture"
-path = dir + "/mon_model_v"+ str(version) + ".keras"
-model = tf.keras.models.load_model(path)
-lemmatizer = WordNetLemmatizer()
+model = None
+lemmatizer = None
+all_word = None
+tags = None
+data = None
 
-import json
+def load_chatbot_model(update_progress=None):
+    global model, lemmatizer, all_word, tags, data
+    if update_progress: update_progress("Chargement de TensorFlow...")
+    from tensorflow.keras.models import load_model
+    import tensorflow.keras.utils
+    if update_progress: update_progress("Chargement de nltk...")
+    import nltk
+    from nltk.stem import WordNetLemmatizer
+    if update_progress: update_progress("Vérification de WordNet...")
+    try: 
+        nltk.data.find('corpora/wordnet')
+    except:
+        nltk.download('wordnet')
+    if update_progress: update_progress("Chargement du modèle IA...")
+    from train_chatbot import get_previous_model_version as get_model_version
+    
 
-with open("./voc.json", "r", encoding="utf-8") as f:
-    all_word = json.load(f)
-with open("./tags.json", "r", encoding="utf-8") as f:
-    tags = json.load(f)
-with open("./data.json", "r", encoding="utf-8") as f:
-    data = json.load(f)
+    version = get_model_version()
+    dir = "./model_architecture"
+    path = dir + "/mon_model_v"+ str(version) + ".keras"
+    model = load_model(path)# charge le model à partir de son chemin
+    if update_progress: update_progress("Chargement des fichiers de données...")
+    lemmatizer = WordNetLemmatizer()
 
+    import json
 
+    with open("./voc.json", "r", encoding="utf-8") as f:
+        all_word = json.load(f)
+    with open("./tags.json", "r", encoding="utf-8") as f:
+        tags = json.load(f)
+    with open("./data.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if update_progress: update_progress("Chatbot prêt !")
 
-
+#-----------------------------------------------------
 def clear_text(text):
+    import nltk
+    global lemmatizer
     text = text.lower()# met tout en minuscule
     text = ''.join(
         c for c in unicodedata.normalize('NFD', text)
@@ -47,6 +62,7 @@ def clear_text(text):
     return tokkens
 #-----------------------------------------------------
 def create_input_array(tokkens):
+    global all_word
     word2idx = {mot: i for i, mot in enumerate(all_word)}
     temp_list = []
     for tokken in tokkens:  # Correction ici
@@ -60,11 +76,13 @@ def create_input_array(tokkens):
     return input_array
 #-----------------------------------------------------
 def intention_predict(input_array_bag_of_word) :
+    global model
     preds = model.predict(input_array_bag_of_word)
     intent = preds.argmax()# récupère le plus probable
     return intent
 #-----------------------------------------------------
 def best_response(intent, phrase_utilisateur) :
+    global tags, data
     tag = tags[intent]
 
     for intent in data["intents"]:
@@ -87,6 +105,9 @@ def best_response(intent, phrase_utilisateur) :
     return "Je n'ai pas compris."
 #-----------------------------------------------------
 def speak_with_chatbot(text):
+    global model
+    if model is None:
+        load_chatbot_model()  # Chargement sans barre si  pas déjà fait
     langue_cible = "fr"  # Langue par défaut
     #tokeniser notre phrase et la rendre plus propre en mettant tout en minuscule et en enlevant la ponctuation
     tokkens = clear_text(text)
