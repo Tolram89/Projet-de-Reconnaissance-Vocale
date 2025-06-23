@@ -114,11 +114,6 @@ async def translate_text(texte, dest,src): # Fonction asynchrone qui permet de t
         else:
             return result.text
         
-async def detect_languages(texte):
-    async with Translator() as translator:
-        result = await translator.detect(texte)
-        result = result.lang  # Récupérer le code de la langue détectée
-        return result
 
 def extraire_info(phrase_utilisateur):
             texte = phrase_utilisateur.lower() # Convertir le texte en minuscules pour la comparaison
@@ -134,13 +129,20 @@ def extraire_info(phrase_utilisateur):
             match1=re.match("traduis-moi", texte)
             match2=re.match("traduis", texte)
             if match1: # Si la phrase commence par "traduis moi"
-                match = re.search(r"moi(.*)en(?!.*en)", texte) # Prendre tout entre moi et en 
+                # Cherche le dernier " en "
+                matches = list(re.finditer(r" en ", texte))
+                if matches:
+                    last_en = matches[-1].start()
+                    debut = texte.find("moi") + len("moi")
+                    texte_a_traduire = texte[debut:last_en].strip()
             elif match2:
-                match = re.search(r"traduis(.*)en(?!.*en)",texte) # Si la phrase commence par "traduis"  
-            texte_a_traduire = match.group(1)
-
+                matches = list(re.finditer(r" en ", texte))
+                if matches:
+                    last_en = matches[-1].start()
+                    debut = texte.find("traduis") + len("traduis")
+                    texte_a_traduire = texte[debut:last_en].strip()
             
-            langue_source=asyncio.run(detect_languages(texte_a_traduire))  # Détecter la langue du texte à traduire
+            langue_source='fr'
             return texte_a_traduire, langue_cible ,langue_source
 
 def recup_calcul(phrase_utilisateur):
@@ -150,7 +152,7 @@ def recup_calcul(phrase_utilisateur):
         match1= re.match("calcule-moi", texte)  # Si la phrase commence par "calcule moi"
         match2= re.match("calcule", texte)  # Si la phrase commence par "calcule"
         match3= re.match("fais le calcul", texte)  # Si la phrase commence par "fais le calcul"
-        match4= re.match("resous moi", texte)  # Si la phrase commence par "resous moi"
+        match4= re.match("résous moi", texte)  # Si la phrase commence par "resous moi"
         mathc5 = re.match("fais moi", texte)  # Si la phrase commence par "fais moi"
 
         if match1:  # Si la phrase commence par "calcule moi"
