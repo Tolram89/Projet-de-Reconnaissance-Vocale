@@ -1547,8 +1547,7 @@ data = {
                 "Quelles sont les infos du soir à Bruxelles ?"
             ],
             "responses": [
-                "Voici les titres du jour : {}",
-                "Aujourd'hui dans l'actualité : {}"
+                "Je ne suis pas encore capable de te donner les dernières nouvelles, on espre cette fonctionnalité à la prochiane MAJ !"
             ]
         },
         {
@@ -1700,8 +1699,7 @@ data = {
                 "Passe une chanson péruvienne"
             ],
             "responses": [
-                "Je lance ta playlist préférée.",
-                "Voici un morceau pour toi : {musique}"
+                "Je ne suis pas encore capable de jouer de la musique, mais j'espère que cette fonctionnalité sera disponible dans une prochaine mise à jour !",
             ]
         },
         {
@@ -1803,8 +1801,7 @@ data = {
                 "Rappelle-moi de prendre un rendez-vous chez le podologue"
             ],
             "responses": [
-                "Je note ça ! Tu peux me demander un rappel spécifique.",
-                "Ok, je te rappellerai."
+                "Pas disponible pour le moment"
             ]
         },
         {
@@ -1953,8 +1950,7 @@ data = {
                 "Mets une alarme à 10h05"
             ],
             "responses": [
-                "Alarme programmée !",
-                "C'est noté, je te réveillerai à l'heure demandée."
+                "Je ne fais pas ça, je ne veux pas voler le travail de ton réveil !"
             ]
         },
         {
