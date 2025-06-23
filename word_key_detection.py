@@ -9,7 +9,13 @@ import dateparser
 import re
 import string
 
-NER = spacy.load("fr_core_news_md")#Named Enitity Recognition
+try:
+    NER = spacy.load("fr_core_news_md")
+except OSError:
+    import spacy.cli
+    print("Le modèle spaCy 'fr_core_news_md' n'est pas installé. Téléchargement en cours...")
+    spacy.cli.download("fr_core_news_md")
+    NER = spacy.load("fr_core_news_md")#Named Enitity Recognition
 
 def recup_ville(phrase_utilisateur) :
     ville = "dijon" #met dijon de base
@@ -127,6 +133,37 @@ def extraire_info(phrase_utilisateur):
             langue_source=asyncio.run(detect_languages(texte_a_traduire))  # Détecter la langue du texte à traduire
             return texte_a_traduire, langue_cible ,langue_source
 
+def recup_calcul(phrase_utilisateur):
+    texte = phrase_utilisateur.lower()  # Convertir la phrase en minuscules pour la comparaison
+    # On utilise eval pour évaluer l'expression mathématique
+    try:
+        match1= re.match("calcule-moi", texte)  # Si la phrase commence par "calcule moi"
+        match2= re.match("calcule", texte)  # Si la phrase commence par "calcule"
+        match3= re.match("fais le calcul", texte)  # Si la phrase commence par "fais le calcul"
+        match4= re.match("resous moi", texte)  # Si la phrase commence par "resous moi"
+        mathc5 = re.match("fais moi", texte)  # Si la phrase commence par "fais moi"
+
+        if match1:  # Si la phrase commence par "calcule moi"
+            expression = re.search(r"calcule-moi(.*)", texte).group(1)  # Récupérer l'expression après "moi"*
+        elif match2:  # Si la phrase commence par "calcule"
+            expression = re.search(r"calcule(.*)", texte).group(1)  # Récupérer l'expression après "calcule"
+        elif match3:  # Si la phrase commence par "fais le calcul"
+            expression = re.search(r"le calcul(.*)", texte).group(1)
+        elif match4:  # Si la phrase commence par "resous moi"
+            expression = re.search(r"résous-moi(.*)", texte).group(1)  # Récupérer l'expression après "resous moi"
+        elif mathc5:  # Si la phrase commence par "fais moi"
+            expression = re.search(r"fais-moi(.*)", texte).group(1)  # Récupérer l'expression après "fais moi"
+
+        match6 = re.findall(r"x", texte)  # recherche tout les x de l'expression
+        
+        if match6:
+            for x in match6:  # Si on trouve des 'x' dans l'expression
+                expression = re.sub(r"x", "*",expression)  # Remplacer 'x' par '*' pour les multiplications        
+        resultat = eval(expression)  # Évaluer l'expression mathématique    
+        return expression , resultat  # Retourner l'expression et le résultat
+    except Exception as e:
+        return "Désolé, je n'ai pas pu comprendre le calcul. Veuillez reformuler."
+
 def key_word(tag, phrase_utilisateur):
     resultat=""
     langue_cible = "fr"  # Langue par défaut
@@ -192,6 +229,10 @@ def key_word(tag, phrase_utilisateur):
         texte_a_traduire, langue_cible,langue_source = extraire_info(phrase_utilisateur)
         resultat =asyncio.run(translate_text(texte_a_traduire,langue_cible,langue_source))
         
-   
-    return resultat,langue_cible
 
+    if tag == 'calculette':
+        # On utilise eval pour évaluer l'expression mathématique
+        expression, resultat = recup_calcul(phrase_utilisateur)
+        resultat ="le résultat de " + expression + " est " + str(resultat)
+
+    return resultat,langue_cible
