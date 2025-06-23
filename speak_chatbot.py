@@ -8,6 +8,7 @@ import string
 from nltk.stem import WordNetLemmatizer
 try: 
     nltk.data.find('corpora/wordnet') # on verifie si wornet est déjà télécharger
+    print("wordnet trouvé")
 except:
     nltk.download('wordnet')  # Une seule fois si ce n'est pas déjà téléchargé
 from train_chatbot import get_previous_model_version as get_model_version

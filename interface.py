@@ -1,35 +1,71 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageOps  # Ajout de ImageOps
-import threading # permet de lancer des taches en simultané
+from PIL import Image, ImageTk, ImageOps
+import threading
 import sounddevice
 import soundfile as sf
-from writting_retranscription import audio_transcribe
-from vocal_retranscription import assistant_speech
-from speak_chatbot import speak_with_chatbot
 import numpy as np
 
 recording = False
 audio_frames = []
 fs = 16000  # fréquence d'échantillonnage
-label2 = None #pour pouvoir l'effacer correctement
+label2 = None  # (ligne 2, pour les messages d'enregistrement)
 
+# --- FONCTIONS DE L'INTERFACE ---
+
+def preload_ia_modules():
+    progress.config(mode="determinate", maximum =100, value = 0)
+    #Charge les modules IA lourds en arrière-plan.
+    from writting_retranscription import audio_transcribe
+    progress['value'] = 25
+    from vocal_retranscription import assistant_speech
+    progress['value'] = 50
+    from speak_chatbot import speak_with_chatbot
+    progress['value'] = 75
+
+def show_image_button():
+    #Affiche le bouton image après le chargement des modules IA.
+    global img, image_button
+    image_path = "oreil prog.jpg"
+    img = Image.open(image_path)
+    img = img.resize((100, 100))
+    img = img.convert("RGB")
+    img = ImageOps.invert(img)
+    photo = ImageTk.PhotoImage(img)
+    image_button = tk.Button(frame, image=photo, command=on_image_button_click, bg="black", borderwidth=0, activebackground="black")
+    image_button.image = photo
+    image_button.pack(expand=True)
+    frame.bind("<Configure>", resize_image)
+
+def finish_loading():
+    #Retire le label de chargement et affiche le bouton image.
+    progress['value'] = 0
+    progress.config(mode="indeterminate")
+    loading_label.destroy()
+    show_image_button()
+
+def threaded_preload():
+    #Lance le préchargement des modules IA dans un thread séparé.
+    preload_ia_modules()
+    root.after(0, finish_loading)# appelle la fonction dès que le thread est fini
 
 def on_image_button_click():
+    #Gère le clic sur le bouton image (enregistrement audio).
     global recording, audio_frames, label2
     if not recording:
-        progress.start() # Démarrer la barre de progression
+        progress.start()
         recording = True
         audio_frames = []
-        label2=tk.Label(root,text="Enregistrement en cours, \n appuyer à nouveau pour stopper l'enregistrement", font=("Terminal", 20), bg="black", fg="green")
-        label2.pack(side=tk.BOTTOM, padx=10, pady=10)
+        show_label2("Enregistrement en cours, appuyer à nouveau pour stopper l'enregistrement")
         threading.Thread(target=record_audio).start()
     else:
-        recording = False# arrete l'enregistrement
-        label2.pack_forget()  # Effacer le texte du label avant de commencer l'enregistrement
-        progress.stop() # stopper la barre de progression
+        recording = False
+        hide_label2()
+        progress.stop()
 
 def record_audio():
+    #Enregistre l'audio et lance la transcription.
+    from writting_retranscription import audio_transcribe
     global audio_frames, recording
     def callback(indata, frames, time, status):
         if recording:
@@ -39,88 +75,97 @@ def record_audio():
     with sounddevice.InputStream(samplerate=fs, channels=1, callback=callback):
         while recording:
             sounddevice.sleep(100)
-    # Sauvegarde et transcription
     audio_np = np.concatenate(audio_frames, axis=0)
     sf.write("audio.wav", audio_np, fs)
-    label2 = tk.Label(root,text="Fin de l'enregistrement.", font=("Terminal", 20), bg="black", fg="green")
-    label2.pack(side=tk.BOTTOM, padx=10, pady=10)
-    label2.after(2000, label2.destroy)  # Détruire le label après 2 secondes
+    show_label2("Fin de l'enregistrement.")
+    label2.after(2000, hide_label2)
     print("Enregistrement terminé.")
     resultat = audio_transcribe()
     print("Résultat de la transcription :")
     print(resultat)
     run_program(resultat)
 
-
 def run_program(resultat):
-    if resultat != "" :
+    #Lance le chatbot et la synthèse vocale selon la transcription.
+    from speak_chatbot import speak_with_chatbot
+    from vocal_retranscription import assistant_speech
+    if resultat != "":
         reponse, langue_cible = speak_with_chatbot(resultat)
-    elif resultat == None:
-        pass#ne rien faire pour pouvoir reparler
-    else :
+    elif resultat is None:
+        return
+    else:
         reponse = "Vous n'avez rien dit, vérifier que votre micro fonctionne bien"
-        langue_cible="fr"
+        langue_cible = "fr"
     assistant_speech(reponse, langue_cible)
 
 def resize_image(event):
-    # Utiliser la taille du frame pour calculer la taille du bouton
+    #Redimensionne dynamiquement l'image du bouton selon la taille du frame.
     frame_width = frame.winfo_width()
     frame_height = frame.winfo_height()
-    size = min(frame_width, frame_height) // 3  #adapte la taille
-    if size < 50:#taille minimum
+    size = min(frame_width, frame_height) // 3
+    if size < 50:
         size = 50
     img_resized = img.resize((size, size))
     photo_resized = ImageTk.PhotoImage(img_resized)
     image_button.config(image=photo_resized)
-    image_button.image = photo_resized  # Garde la référence
+    image_button.image = photo_resized
 
+# --- INTERFACE GRAPHIQUE ---
 
-# Création de la fenêtre principale
 root = tk.Tk()
 root.title("Beru")
-root.minsize(600,400)
-
-# Définir la couleur de fond de la fenêtre principale
+root.minsize(854, 480)
 root.configure(bg="black")
 
-# Chargement de l'image
-image_path = "oreil prog.jpg" 
-img = Image.open(image_path)
-img = img.resize((150, 150))  # Redimensionner si besoin
+# Configuration du grid principal (4 lignes, 2 colonne)
+root.rowconfigure(0, weight=0)  # label1 (fixe)
+root.rowconfigure(1, weight=1)  # frame central (prend tout l'espace dispo)
+root.rowconfigure(2, weight=0)  # label2 (fixe)
+root.rowconfigure(3, weight=0)  # progress
+root.rowconfigure(4, weight=0)  # bouton
+root.columnconfigure(0, weight=1)
 
-# Inverser les couleurs de l'image
-img = img.convert("RGB")  # S'assurer que l'image est en mode RGB
-img = ImageOps.invert(img)
+# Label d'accueil (ligne 0)
+label1 = tk.Label(root, text="Bienvenue dans l'assistant vocal Beru", font=("Terminal", 20), bg="black", fg="green")
+label1.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
 
-photo = ImageTk.PhotoImage(img)
+# Frame central pour le bouton image (ligne 1)
+frame = tk.Frame(root, bg="black")
+frame.grid(row=1, column=0, sticky="nsew")
 
+# Frame pour label2 (ligne 2)
+frame_label2 = tk.Frame(root, bg="black", height=50)  # hauteur fixe
+frame_label2.grid(row=2, column=0, columnspan=2, sticky="ew")
+frame_label2.grid_propagate(False)  # Empêche le frame de changer de taille
 
-#création d'un bouton pour quitter l'application
+# Label de chargement (affiché au lancement, dans le frame central)
+loading_label = tk.Label(frame, text="Chargement en cours...", font=("Terminal", 20), bg="black", fg="yellow")
+loading_label.pack(expand=True)
+
+# Bouton pour quitter l'application (ligne 3, colonne 1)
 button = tk.Button(root, text='Terminer', width=25, command=lambda: [progress.stop(), root.quit()])
-button.pack(side=tk.BOTTOM, padx=10, pady=10)
+button.grid(row=4, column=0, sticky="", padx=10, pady=10)
 
-#Création d'une barre de progression
+# Barre de progression (ligne 3, colonne 0)
 progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="indeterminate")
-progress.pack(side=tk.BOTTOM, padx=10, pady=10)
+progress.grid(row=3, column=0, sticky="", padx=10, pady=10)
 
-# Création d'un label pour le texte
-label1 =tk.Label(root, text="Bienvenue dans l'assistant vocal Beru", font=("Terminal", 20), bg="black", fg="green")
-label1.pack(side=tk.TOP, padx=10, pady=10)
+# Pour afficher/détruire label2 proprement :
+def show_label2(text):
+    global label2
+    if label2:
+        label2.destroy()
+    label2 = tk.Label(root, text=text, font=("Terminal", 20), bg="black", fg="green")
+    label2.grid(row=2, column=0, sticky="ew", padx=10, pady=10)
 
-# Création d'un conteneur pour centrer le bouton
-frame = tk.Frame(root)
-frame.pack(expand=True, fill="both")
+def hide_label2():
+    global label2
+    if label2:
+        label2.destroy()
+        label2 = None
 
-# Modifier la couleur de fond du conteneur pour qu'il corresponde
-frame.configure(bg="black")
+# Lancer le préchargement des modules IA en arrière-plan
+threading.Thread(target=threaded_preload, daemon=True).start()
 
-# Création d'un bouton image
-image_button = tk.Button(frame, image=photo, command=on_image_button_click, bg="black", borderwidth=0, activebackground="black") 
-#lambda permet de lancer mes deux fonctions en même temps
-image_button.image = photo  # Garde une référence à l'image
-image_button.pack(expand=True)
-
-frame.bind("<Configure>", resize_image)
-
-# Lancement de la boucle principale de l'interface
+# Boucle principale
 root.mainloop()
