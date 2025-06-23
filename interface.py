@@ -11,17 +11,21 @@ audio_frames = []
 fs = 16000  # fréquence d'échantillonnage
 label2 = None  # (ligne 2, pour les messages d'enregistrement)
 
-# --- FONCTIONS DE L'INTERFACE ---
-
 def preload_ia_modules():
-    progress.config(mode="determinate", maximum =100, value = 0)
-    #Charge les modules IA lourds en arrière-plan.
-    from writting_retranscription import audio_transcribe
-    progress['value'] = 25
-    from vocal_retranscription import assistant_speech
-    progress['value'] = 50
-    from speak_chatbot import speak_with_chatbot
-    progress['value'] = 75
+    progress.start()
+    # Fonction pour mettre à jour le texte du label de chargement depuis le thread
+    def update_progress(txt):
+        root.after(0, lambda: loading_label.config(text=txt))
+
+    import writting_retranscription 
+    update_progress("Chargement du module de transcription...")
+    import vocal_retranscription 
+    update_progress("Chargement du module vocal...")
+    from speak_chatbot import load_chatbot_model, speak_with_chatbot
+    update_progress("Chargement du chatbot (cela peut prendre quelques secondes)...")
+    load_chatbot_model(update_progress)  # Passe le callback à load_chatbot_model
+    speak_with_chatbot("bonjour")# faire tourner une fois l'IA car le modèle est long en premiere utilisation
+    progress.stop()
 
 def show_image_button():
     #Affiche le bouton image après le chargement des modules IA.
@@ -39,8 +43,6 @@ def show_image_button():
 
 def finish_loading():
     #Retire le label de chargement et affiche le bouton image.
-    progress['value'] = 0
-    progress.config(mode="indeterminate")
     loading_label.destroy()
     show_image_button()
 

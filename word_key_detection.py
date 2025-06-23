@@ -66,7 +66,7 @@ def recup_date(phrase_utilisateur) :
 def recup_meteo(lat, lon, start_date, end_date, ville, date_phrase):
     today_str = datetime.now().strftime("%Y-%m-%d")
 
-    if start_date==today_str or date_phrase == "demain":
+    if start_date==today_str:
         # Si la date demandée est aujourd'hui
         #On récupère la température actuelle avec current_weather
         url = "https://api.open-meteo.com/v1/forecast?latitude="+str(lat)+"&longitude="+str(lon)+"&current_weather=true"
