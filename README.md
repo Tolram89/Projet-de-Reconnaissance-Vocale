@@ -23,12 +23,7 @@ Ce projet utilise la reconnaissance vocale pour capturer la voix, retranscrire l
     ```
 
 ## Utilisation
-1. Exécutez le script d'installation des dépendances (si nécessaire) :
-    ```sh
-    python install_dependencies.py
-    ```
-
-2. Lancez l'application :
+1. Lancez l'application :
     ```sh
     python main.py
     ```
