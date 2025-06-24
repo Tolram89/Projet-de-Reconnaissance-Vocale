@@ -150,7 +150,7 @@ button.grid(row=4, column=0, sticky="", padx=10, pady=10)
 
 # Barre de progression (ligne 3, colonne 0)
 progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="indeterminate")
-progress.grid(row=3, column=0, sticky="", padx=10, pady=10)
+progress.grid(row=3, column=0, sticky="ew", padx=10, pady=10)
 
 # Pour afficher/détruire label2 proprement :
 def show_label2(text):
